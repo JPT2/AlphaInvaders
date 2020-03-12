@@ -29,6 +29,7 @@ class Alpha_Invader:
             Look at compile API
             Look at TF for RL
             Look into what kind of optimizer we would want
+            Lookup what sess.run does
         '''
         model.compile(optimizer='adam',
                       loss=tf.keras.losses.mean_squared_error,
