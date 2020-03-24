@@ -4,6 +4,7 @@ AiGym
 Manages the training environment for an agent and tracks agent progress for general comparison
 """
 import gym
+import tensorflow as tf
 
 
 class bcolors:
@@ -64,13 +65,14 @@ class AiGym:
                 curr_episode_length += 1
                 if self.render:
                     self.env.render()  # Seem can run as human if pass string human
+                # action = self.agent.action_value(observation)
                 action = self.agent.get_action(observation)
 
                 # Execute action
                 observation, reward, done, info = self.env.step(action)
 
                 # Process result (store or do online learning)
-                self.agent.give_feedback(reward)
+                self.agent.add_feedback(observation, reward)
 
                 # Update logs
                 curr_episode_reward = curr_episode_reward + reward
@@ -96,11 +98,14 @@ class AiGym:
 
             # Print out progress so far if requested
             if self.update_interval and episode_count % self.update_interval == 0 and episode_count != self.num_episodes:
-                print("Currently on episode: ", episode_count)
+                print("Currently on episode: ", episode_count, "/", self.num_episodes)
                 self.get_results()
 
             if 0 < self.num_episodes <= episode_count:
                 break
+
+            # Train (Depending on batch count - TODO)
+            self.agent.learn()
 
         print("******************************")
         print(f"{bcolors.OKBLUE}Training Complete :){bcolors.ENDC}")
