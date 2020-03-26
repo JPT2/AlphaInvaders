@@ -47,6 +47,7 @@ class Model(tf.keras.Model):
         # Will become clearer later why we don't use it.
         return np.squeeze(action, axis=-1), np.squeeze(value, axis=-1)
 
+
 # Stores examples/training data. Does any data manipulation beyond generation from environment
     # So memory, reward computation, episode bundling, batch sizes
 class Agent:

@@ -20,22 +20,11 @@ class bcolors:
 
 # Might want to make the environment an input arg
 class AiGym:
-    def __init__(self, name, agent, num_episodes, episode_length, render, save_interval, print_config={}):
-        self.env = gym.make('SpaceInvaders-v0')
-
-        self.name = name  # Identifier for purpose of comparison
-        self.agent = agent  # Model helper
-
-        # -1 means run until done, otherwise runs episode for given number of steps
-        self.episode_length = episode_length
-
-        # -1 means run forever, otherwise runs for specified episodes
-        self.num_episodes = num_episodes
-
-        # Environment Control
-        self.render = render
-
-        self.update_interval = print_config["update_interval"]  # In terms of episodes
+    def __init__(self, env, name, agent, settings):
+        self.env = env
+        self.name = name
+        self.agent = agent
+        self.settings = settings
 
         # Monitored Metrics
         self.reward_average_episode = 0
@@ -44,11 +33,7 @@ class AiGym:
         self.reward_worst_episode = float('inf')  # Set to max value
         self.worst_episode = -1
 
-        self.save_interval = save_interval  # Tells how often to save the model (-1 means don't save)
-
-        # TODO - Add some type of print-frequency so can get updates
-
-    def start(self):
+    def start(self, num_episodes, episode_length, update_interval, save, render=False):
         print("===============================")
         print("Booting up " + self.name + " for " + self.agent.name)
         # Get initial observation to kick off training
@@ -63,7 +48,7 @@ class AiGym:
             observation = self.env.reset()
             while True:
                 curr_episode_length += 1
-                if self.render:
+                if render:
                     self.env.render()  # Seem can run as human if pass string human
                 # action = self.agent.action_value(observation)
                 action = self.agent.get_action(observation)
@@ -97,11 +82,11 @@ class AiGym:
                 self.reward_worst_episode = curr_episode_reward
 
             # Print out progress so far if requested
-            if self.update_interval and episode_count % self.update_interval == 0 and episode_count != self.num_episodes:
-                print("Currently on episode: ", episode_count, "/", self.num_episodes)
+            if update_interval and episode_count % update_interval == 0 and episode_count != num_episodes:
+                print("Currently on episode: ", episode_count, "/", num_episodes)
                 self.get_results()
 
-            if 0 < self.num_episodes <= episode_count:
+            if 0 < num_episodes <= episode_count:
                 break
 
             # Train (Depending on batch count - TODO)

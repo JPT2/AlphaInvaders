@@ -31,6 +31,8 @@ agent = Agent.Brain("First Attempt", model) # Should take in a batch size
 
 # I want to create a gym for this agent, I want it to save its model versions
 # TODO Init Gym
+training_gym = AiGym.AiGym("First Test", agent, {"render": False, "update_interval": 5});
+training_gym.train(10, -1)
 
 # I want to train this agent, for this many episodes with each episode no longer than this length
 # TODO call training start
