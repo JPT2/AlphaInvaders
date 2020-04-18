@@ -173,6 +173,15 @@ class Agent:
 
     def save(self):
         tf.keras.models.save_model(
-            self.model, self.settings.filepath, overwrite=True, include_optimizer=True, save_format=None,
+            self.model, self.settings["filepath"], overwrite=True, include_optimizer=True, save_format=None,
             signatures=None, options=None
         )
+
+    def load(self):
+        self.model = tf.keras.models.load_model(
+            self.settings["filepath"], compile=False
+        )
+        self.model.compile(
+            optimizer=ko.RMSprop(lr=self.settings["learning_rate"]),
+            # Define separate losses for policy logits and value estimate.
+            loss=[self._policy_loss, self._value_loss])

@@ -35,7 +35,7 @@ class AiGym:
         self.reward_worst_episode = float('inf')  # Set to max value
         self.worst_episode = -1
 
-    def train(self, num_episodes, episode_length=-1, train_interval=1, save_interval=0, settings=None):
+    def train(self, num_episodes, episode_length=-1, train_interval=1, save_interval=-1, settings=None):
         if settings is None:
             settings = {"render": False, "stat_print_interval": num_episodes // 2}
         print("===============================")
@@ -98,6 +98,7 @@ class AiGym:
             if episode_count % train_interval == 0:
                 self.agent.learn()
 
+        self.save()
         print("******************************")
         print(f"{bcolors.OKBLUE}Training Complete :){bcolors.ENDC}")
         print(f"{bcolors.OKBLUE}Final Stats{bcolors.ENDC}")

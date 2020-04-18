@@ -19,10 +19,11 @@ SCREEN_WIDTH = 160
 # Setup the environments
 
 env = gym.make('SpaceInvaders-v0')
-print("Action space: " +  str(env.action_space.n))
+print("Action space: " + str(env.action_space.n))
 model = Agent.Model(num_actions=env.action_space.n)
 agent = Agent.Agent("First Attempt", model) # Should take in a batch size
+agent.load()
 
 # I want to create a gym for this agent, I want it to save its model versions
-training_gym = AiGym.AiGym("First Test", env, agent, {"render": False, "update_interval": 5});
-training_gym.train(10)
+training_gym = AiGym.AiGym("First Test", env, agent, {"render": True, "update_interval": 100})
+training_gym.train(1000)
